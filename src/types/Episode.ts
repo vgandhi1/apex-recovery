@@ -36,6 +36,7 @@ export interface EpisodeMetadata {
   data_quality: {
     data_quality_score: number
     training_priority: string
+    sim_gap_relevance: string
     usable_for_training: boolean
     exclusion_reason: string | null
   }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useCockpitStore } from '../store/cockpitStore'
 import { TagSubmission } from '../types/StateMachine'
+import { SIM_GAP_FAILURE_TYPES } from '../utils/dataQualityScore'
 
 const FAILURE_TYPES = [
   { code: 'GRASP_FAIL', label: 'Grasp Failure' },
@@ -84,6 +85,9 @@ export const TaggingModal: React.FC = () => {
                     {ft.code}
                   </span>
                   <span className="text-xs text-gray-600">{ft.label}</span>
+                  {SIM_GAP_FAILURE_TYPES.has(ft.code) && (
+                    <span className="text-xs text-emerald-500 font-mono border border-emerald-800 rounded px-1">sim gap</span>
+                  )}
                   {ft.code === 'GRASP_FAIL' && (
                     <span className="ml-auto text-xs text-blue-400 font-mono">(suggested 72%)</span>
                   )}

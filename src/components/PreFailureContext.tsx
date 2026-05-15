@@ -1,5 +1,6 @@
 import React from 'react'
 import { useCockpitStore } from '../store/cockpitStore'
+import { SIM_GAP_FAILURE_TYPES } from '../utils/dataQualityScore'
 
 export const PreFailureContext: React.FC = () => {
   const { alertFiredAt, confidenceAtAlert, confidenceTrend, recoveryState } = useCockpitStore()
@@ -28,10 +29,13 @@ export const PreFailureContext: React.FC = () => {
           <p className="text-xs font-mono text-gray-300">
             Confidence: {trendStr}
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-mono text-gray-400">Suggested:</span>
             <span className="text-xs font-mono text-blue-300 font-bold">GRASP_FAIL</span>
             <span className="text-xs text-gray-500">(72%)</span>
+            {SIM_GAP_FAILURE_TYPES.has('GRASP_FAIL') && (
+              <span className="text-xs text-emerald-500 font-mono border border-emerald-800 rounded px-1">sim gap</span>
+            )}
           </div>
           <p className="text-xs font-mono text-gray-500">
             60s pre-failure buffer available

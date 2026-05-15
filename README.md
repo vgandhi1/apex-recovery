@@ -23,6 +23,7 @@ This is not a toy UI exercise. It is a response to a specific, high-stakes probl
 | Hardware-informed product decisions | Every UI element in the cockpit traces to a physical constraint (camera lag, haptic round-trip, force sensor rate) — documented in the Hardware Constraints Decision Log |
 | Domain knowledge depth | The DEFERRED_QUEUE state is a non-obvious design choice: most systems E-stop on failure; this one deliberately holds the scene to preserve the pre-failure training signal |
 | Structured data thinking | The failure taxonomy is defined before the UI, because the UI exists solely to generate labeled data for the ML team |
+| Sim-to-real awareness | Three failure types (`LIGHTING`, `OBJ_NOVEL`, `COLLAB_CONFLICT`) are classified as sim-gap counterexamples in the episode schema — surfaced to operators at tagging time and reflected in `training_priority` and `sim_gap_relevance` fields |
 | Full-stack prototype execution | The spec ships as a working, deployed React app with simulated telemetry, all 6 cockpit panels, and a JSON export matching the episode metadata schema |
 
 ---
@@ -169,6 +170,7 @@ On tag submission the app produces a JSON file matching the training pipeline co
   "data_quality": {
     "data_quality_score": 87,
     "training_priority": "high",
+    "sim_gap_relevance": "low",
     "usable_for_training": true
   }
 }
@@ -201,6 +203,7 @@ This section documents how the project was planned and built — the decisions m
 - 8 primary failure codes mapped to confidence patterns, recovery complexity, and training data value — this lets the routing algorithm prioritize high-value failures for the best operators
 - 6 secondary tags designed to be applied as chips (no typing required) — tagging speed is a key metric; friction reduces quality over time
 - `UNKNOWN` is a first-class category, not an error state — novel failure modes are the highest-value training signal
+- Three failure types (`LIGHTING`, `OBJ_NOVEL`, `COLLAB_CONFLICT`) are designated **sim-gap counterexamples**: each captures a real-world condition the simulator cannot model (renderer limitations, out-of-distribution geometry, dynamic human proximity). These are tagged `sim_gap_relevance: high` in the episode schema and surface a "sim gap" badge in the cockpit tagging modal so operators understand why the episode is high-value
 
 ### Phase 3 — State Machine Design
 

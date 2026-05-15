@@ -1,4 +1,5 @@
 import { TagSubmission } from '../types/StateMachine'
+import { SIM_GAP_FAILURE_TYPES } from './dataQualityScore'
 
 interface StoreSnapshot {
   episodeId: string
@@ -26,12 +27,21 @@ export function buildEpisodePayload(state: StoreSnapshot, tags: TagSubmission) {
       ? (state.recoveryStartedAt.getTime() - state.alertFiredAt.getTime()) / 1000
       : 0
 
+  const isSimGap = SIM_GAP_FAILURE_TYPES.has(tags.failureType)
   const latencyScore = Math.max(0, 100 - (state.latencyMs - 50) * 1.0)
   const qualityScore = Math.round(
     (tags.recoveryQuality / 5) * 60 +
     latencyScore * 0.3 +
-    (tags.failureType !== 'UNKNOWN' ? 10 : 0)
+    (isSimGap || tags.failureType === 'UNKNOWN' ? 10 : 0)
   )
+  const trainingPriority =
+    isSimGap && state.latencyMs < 80 ? 'very_high' :
+    qualityScore >= 80 ? 'high' :
+    qualityScore >= 60 ? 'medium' : 'low'
+  const simGapRelevance =
+    isSimGap ? 'high' :
+    tags.failureType === 'UNKNOWN' ? 'unknown' :
+    tags.failureType === 'ESTOP' ? 'none' : 'low'
 
   const now = new Date().toISOString()
 
@@ -73,7 +83,8 @@ export function buildEpisodePayload(state: StoreSnapshot, tags: TagSubmission) {
     },
     data_quality: {
       data_quality_score: qualityScore,
-      training_priority: qualityScore >= 80 ? 'high' : qualityScore >= 60 ? 'medium' : 'low',
+      training_priority: trainingPriority,
+      sim_gap_relevance: simGapRelevance,
       usable_for_training: qualityScore >= 50 && tags.failureType !== 'ESTOP',
       exclusion_reason: null,
     },

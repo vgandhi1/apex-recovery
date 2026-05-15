@@ -111,6 +111,18 @@ ALERT generated → operator routing algorithm selects best-available operator
         SLA timer starts (configurable: default 5 minutes)
 ```
 
+### Why Recovery Episodes Close the Sim-to-Real Gap
+
+Most robot policies entering factory deployment were trained predominantly in simulation. Simulation environments cannot fully replicate real-world variance: object surface textures, lighting gradients, cable compliance, worn part tolerances. The result is a predictable failure pattern — the policy performs well in sim and in controlled lab conditions, then degrades on the actual floor.
+
+The standard research remedy is targeted real-world fine-tuning using demonstrations that specifically cover the conditions the simulator missed. Recovery episodes are the highest-density source of exactly this data:
+
+- A `LIGHTING` failure captures a scene condition the renderer never modeled
+- An `OBJ_NOVEL` failure captures an object geometry outside the simulator's asset library
+- A `COLLAB_CONFLICT` failure captures dynamic human-robot proximity the sim treated as a static environment
+
+Each tagged recovery episode is not just a corrected mistake — it is a labeled real-world counterexample to a specific simulator assumption. APEX makes the systematic collection of these counterexamples operationally tractable at shift scale, directly accelerating the sim-to-real convergence rate of the policy.
+
 ### Problem Scope
 
 This PRD covers the **software system** from confidence-drop event to training-queue submission. It does **not** cover:
