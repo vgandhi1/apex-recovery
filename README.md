@@ -1,3 +1,5 @@
+> **⚠️ Archived (2026-06-28)** — Folded into [**PM**](https://github.com/vgandhi1/PM). See [ARCHIVED.md](./ARCHIVED.md).
+
 # APEX — Autonomous Policy Edge-Case and Recovery
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen?style=flat-square)](https://vgandhi1.github.io/apex-recovery)
