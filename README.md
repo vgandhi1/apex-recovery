@@ -1,3 +1,8 @@
+> ⚠️ **ARCHIVED** — now maintained as part of
+> [vgandhi1/robot-data-flywheel](https://github.com/vgandhi1/robot-data-flywheel/tree/main/APEX-recover) (archived: 2026-06-28).
+> The live demo is at: https://vgandhi1.github.io/robot-data-flywheel/APEX-recover/
+
+
 > **⚠️ Archived (2026-06-28)** — Folded into [**PM**](https://github.com/vgandhi1/PM). See [ARCHIVED.md](./ARCHIVED.md).
 
 # APEX — Autonomous Policy Edge-Case and Recovery
